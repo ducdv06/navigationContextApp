@@ -1,16 +1,34 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ name }) {
 
   return (
-    <View style={{ flex:1, justifyContent:"center", alignItems:"center" }}>
-      <Text>Home Screen</Text>
+    <View style={styles.container}>
 
-      <Button
-        title="Go to Profile"
-        onPress={() => navigation.navigate("Profile")}
-      />
+      <Ionicons name="home" size={80} color="#4A90E2" />
+
+      <Text style={styles.text}>
+        Xin chào {name}
+      </Text>
+
     </View>
   );
+
 }
+
+const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  text: {
+    fontSize: 24,
+    marginTop: 20
+  }
+
+});

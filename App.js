@@ -1,50 +1,46 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
 
-import SignInScreen from "./screens/SignInScreen";
+import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import AccountScreen from "./screens/AccountScreen";
 
-import { AuthProvider, AuthContext } from "./context/AuthContext";
+const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator();
+export default function App() {
+  const [user, setUser] = useState(null);
 
-function AppNavigator() {
-
-  const { user } = useContext(AuthContext);
+  if (!user) {
+    return <LoginScreen setUser={setUser} />;
+  }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
 
-        {user == null ? (
-          <Stack.Screen
-            name="SignIn"
-            component={SignInScreen}
-          />
-        ) : (
-          <>
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-            />
-            <Stack.Screen
-              name="Profile"
-              component={ProfileScreen}
-            />
-          </>
-        )}
+            if (route.name === "Home") {
+              iconName = "home";
+            } else if (route.name === "Account") {
+              iconName = "person";
+            }
 
-      </Stack.Navigator>
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen name="Home">
+          {() => <HomeScreen name={user} />}
+        </Tab.Screen>
+
+        <Tab.Screen name="Account">
+          {() => <AccountScreen name={user} setUser={setUser} />}
+        </Tab.Screen>
+      </Tab.Navigator>
     </NavigationContainer>
-  );
-}
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <AppNavigator/>
-    </AuthProvider>
   );
 }
